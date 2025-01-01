@@ -19,6 +19,7 @@ void saveItem(const vector<ItemStructure> &item);
 vector<ItemStructure> loadItems();
 void createItem();
 void readItem();
+void deleteItem();
 
 int main()
 {
@@ -43,12 +44,15 @@ int main()
             createItem();
             break;
         case 2:
+            readItem();
             break;
         case 3:
             break;
         case 4:
+            deleteItem();
             break;
         case 5:
+            cout << "Thank you for using my program" << endl;
             break;
         Default:
             cout << "wrong input" << endl;
@@ -60,17 +64,18 @@ int main()
 
 void createItem()
 {
-    vector<ItemStructure> item;
+    vector<ItemStructure> item = loadItems();
     ItemStructure i;
     cout << "\n---- Creating an Item -----" << endl;
 
     cout << "Enter the name of the item: ";
+    cin.ignore();
     getline(cin, i.name);
 
     cout << "Enter the Id of the Item: ";
     getline(cin, i.itemId);
 
-    cout << "Enter the price of the Item: ";
+    cout << "Enter the price of the Item: $";
     cin >> i.price;
 
     item.push_back(i);
@@ -92,56 +97,99 @@ void saveItem(const vector<ItemStructure> &item)
         }
     }
     file.close();
-    cout << "Item saved successfully" << endl;
 }
 
-vector<ItemStructure> loadItems(){
+vector<ItemStructure> loadItems()
+{
     ifstream file(itemFile);
     vector<ItemStructure> item;
     string line;
 
-    if(file.is_open()){
+    if (file.is_open())
+    {
         ItemStructure i;
-        while(getline(file, line)){
-            if(line == "---"){
+        while (getline(file, line))
+        {
+            if (line == "---")
+            {
                 item.push_back(i);
                 i = ItemStructure();
                 continue;
             }
 
-            else if(i.name.empty()){
+            else if (i.name.empty())
+            {
                 i.name = line;
             }
-            else if(i.itemId.empty()){
+            else if (i.itemId.empty())
+            {
                 i.itemId = line;
             }
-            else{
+            else
+            {
                 i.price = stoi(line);
             }
-            
         }
-        
     }
     return item;
 }
 
-
-void readItem(){
+void readItem()
+{
     vector<ItemStructure> item = loadItems();
     int count = 1;
+    if (!item.empty())
+    {
+        cout << "\n\t\t---- Reading Items ----\n" << endl;
 
-    cout << "\n---- Reading Items ----" << endl;
-
-    cout << left << setw(5) << "S\\N"
-    << setw(15)<<"Item name"
-    <<setw(10)<<"Item Price"
-    <<setw(10)<<"Item Id";
-    for(const auto &i : item){
-        cout << left << setw(5) << count
-             << setw(15) << i.name
-             << setw(10) << i.price
-             << setw(10) << i.itemId;
-        count += 1;
+        cout << left << setw(5) << "S\\N"
+             << setw(15) << "Item name"
+             << setw(15) << "Item Price"
+             << setw(10) << "Item Id" << endl;
+        for (const auto &i : item)
+        {
+            cout << left << setw(5) << count
+                 << setw(15) << i.name << "$"
+                 << setw(15) << i.price
+                 << setw(10) << i.itemId << endl;
+            count += 1;
+        }
+        cout << "\n\t\t--- End of the Items ---\n\n" << endl;
     }
-    cout << "--- End of the Items ---" << endl;
+    else
+    {
+        cout << "Item data not found can't display items\n"
+             << endl;
+    }
+}
+
+void deleteItem(){
+    readItem();
+    cout << "\n\t\t--- Deleting an item ---" << endl;
+    vector<ItemStructure> item = loadItems();
+    
+
+    if(!item.empty()){
+        string nameOrId;
+        bool found = false;
+        cout << "Enter the name or the Id of the item you want to delete: ";
+        cin.ignore();
+        getline(cin, nameOrId);
+        int j = 0;
+
+        for (auto i = item.begin(); i != item.end();i++)
+        {
+            if((i->name == nameOrId) || (i->itemId== nameOrId)){
+                found = true;
+                item.erase(i);
+                saveItem(item);
+                cout << "Item deleted" << endl;
+                break;
+            }
+            j += 1;
+        }
+        if(!found){
+            cout << "The item was not found" << endl;
+        }
+    }
 }
