@@ -90,9 +90,34 @@ void saveItem(const vector<ItemStructure> &item)
         }
     }
     file.close();
-    cout << "Item save successfully" << endl;
+    cout << "Item saved successfully" << endl;
 }
 
 vector<ItemStructure> loadItems(){
-    
+    ifstream file(itemFile);
+    vector<ItemStructure> item;
+    string line;
+
+    if(file.is_open()){
+        ItemStructure i;
+        while(getline(file, line)){
+            if(line == "---"){
+                item.push_back(i);
+                i = ItemStructure();
+                continue;
+            }
+
+            else if(i.name.empty()){
+                i.name = line;
+            }
+            else if(i.itemId.empty()){
+                i.itemId = line;
+            }
+            else{
+                i.price = stoi(line);
+            }
+            
+        }
+    }
+
 }
