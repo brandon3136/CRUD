@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ struct ItemStructure
 void saveItem(const vector<ItemStructure> &item);
 vector<ItemStructure> loadItems();
 void createItem();
+void readItem();
 
 int main()
 {
@@ -118,6 +120,28 @@ vector<ItemStructure> loadItems(){
             }
             
         }
+        
     }
+    return item;
+}
 
+
+void readItem(){
+    vector<ItemStructure> item = loadItems();
+    int count = 1;
+
+    cout << "\n---- Reading Items ----" << endl;
+
+    cout << left << setw(5) << "S\\N"
+    << setw(15)<<"Item name"
+    <<setw(10)<<"Item Price"
+    <<setw(10)<<"Item Id";
+    for(const auto &i : item){
+        cout << left << setw(5) << count
+             << setw(15) << i.name
+             << setw(10) << i.price
+             << setw(10) << i.itemId;
+        count += 1;
+    }
+    cout << "--- End of the Items ---" << endl;
 }
