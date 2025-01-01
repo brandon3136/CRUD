@@ -20,6 +20,7 @@ vector<ItemStructure> loadItems();
 void createItem();
 void readItem();
 void deleteItem();
+void updateItem();
 
 int main()
 {
@@ -47,6 +48,7 @@ int main()
             readItem();
             break;
         case 3:
+            updateItem();
             break;
         case 4:
             deleteItem();
@@ -175,8 +177,6 @@ void deleteItem(){
         cout << "Enter the name or the Id of the item you want to delete: ";
         cin.ignore();
         getline(cin, nameOrId);
-        int j = 0;
-
         for (auto i = item.begin(); i != item.end();i++)
         {
             if((i->name == nameOrId) || (i->itemId== nameOrId)){
@@ -186,9 +186,39 @@ void deleteItem(){
                 cout << "Item deleted" << endl;
                 break;
             }
-            j += 1;
         }
         if(!found){
+            cout << "The item was not found" << endl;
+        }
+    }
+}
+
+void updateItem(){
+    readItem();
+    cout << "\n\t\t--- Updating an item ---" << endl;
+    vector<ItemStructure> item = loadItems();
+
+    if (!item.empty())
+    {
+        string nameOrId;
+        bool found = false;
+        cout << "Enter the name or the Id of the item you want to update: ";
+        cin.ignore();
+        getline(cin, nameOrId);
+        for (auto i = item.begin(); i != item.end(); i++)
+        {
+            if ((i->name == nameOrId) || (i->itemId == nameOrId))
+            {
+                found = true;
+                item.erase(i);
+                saveItem(item);
+                createItem();
+                cout << "Item updated" << endl;
+                break;
+            }
+        }
+        if (!found)
+        {
             cout << "The item was not found" << endl;
         }
     }
