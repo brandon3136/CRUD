@@ -6,8 +6,11 @@
 
 using namespace std;
 
+// global variable for a file
 const string itemFile = "Items.txt";
 
+
+// structure of the item
 struct ItemStructure
 {
     string itemId;
@@ -15,6 +18,7 @@ struct ItemStructure
     int price;
 };
 
+// function prototypes
 void saveItem(const vector<ItemStructure> &item);
 vector<ItemStructure> loadItems();
 void createItem();
@@ -142,7 +146,8 @@ void readItem()
     int count = 1;
     if (!item.empty())
     {
-        cout << "\n\t\t---- Reading Items ----\n" << endl;
+        cout << "\n\t\t---- Reading Items ----\n"
+             << endl;
 
         cout << left << setw(5) << "S\\N"
              << setw(15) << "Item name"
@@ -156,7 +161,8 @@ void readItem()
                  << setw(10) << i.itemId << endl;
             count += 1;
         }
-        cout << "\n\t\t--- End of the Items ---\n\n" << endl;
+        cout << "\n\t\t--- End of the Items ---\n\n"
+             << endl;
     }
     else
     {
@@ -165,21 +171,23 @@ void readItem()
     }
 }
 
-void deleteItem(){
+void deleteItem()
+{
     readItem();
     cout << "\n\t\t--- Deleting an item ---" << endl;
     vector<ItemStructure> item = loadItems();
-    
 
-    if(!item.empty()){
+    if (!item.empty())
+    {
         string nameOrId;
         bool found = false;
         cout << "Enter the name or the Id of the item you want to delete: ";
         cin.ignore();
         getline(cin, nameOrId);
-        for (auto i = item.begin(); i != item.end();i++)
+        for (auto i = item.begin(); i != item.end(); i++)
         {
-            if((i->name == nameOrId) || (i->itemId== nameOrId)){
+            if ((i->name == nameOrId) || (i->itemId == nameOrId))
+            {
                 found = true;
                 item.erase(i);
                 saveItem(item);
@@ -187,13 +195,15 @@ void deleteItem(){
                 break;
             }
         }
-        if(!found){
+        if (!found)
+        {
             cout << "The item was not found" << endl;
         }
     }
 }
 
-void updateItem(){
+void updateItem()
+{
     readItem();
     cout << "\n\t\t--- Updating an item ---" << endl;
     vector<ItemStructure> item = loadItems();
